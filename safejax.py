@@ -26,7 +26,7 @@ def load_safetensors(fname, target):
     arrvals = [x[1] for x in arrays]
     key_index={k:i for i,k in enumerate(arrkeys)}
     # Load tensor data
-    print(f"load {fname}.safetensors")
+    print(f"load {fname}")
     flat_state = load_file(fname)
     missing = set(arrkeys)-set(flat_state.keys())
     if len(missing)>0:
