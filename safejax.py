@@ -3,14 +3,18 @@ import jax.numpy
 import numpy as np
 from safetensors.numpy import save_file, load_file
 from jax.tree_util import tree_flatten, tree_unflatten
-
-def save_safetensors(fpath, state):
+def is_prng_key(x):
+    return isinstance(x, jax.Array) and x.dtype == jnp.uint32 and x.shape[-1] == 2
+    
+def save_safetensors(fpath, state, exclude_keys=True):
     arrays, treedef = jax.tree.flatten_with_path(state)
     flat_state = {}
 
     # Convert all JAX arrays to NumPy for saving
     for kp, leaf in arrays:
         key = jax.tree_util.keystr(kp)
+        if is_prng_key(leaf) and exclude_keys:
+            continue
         if isinstance(leaf, jax.Array):
             flat_state[key] = np.array(leaf)
         elif isinstance(leaf, np.ndarray):
