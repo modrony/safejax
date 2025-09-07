@@ -18,7 +18,7 @@ def save_safetensors(fpath, state):
         else:
             raise TypeError(f"Unsupported leaf type: {key}: {type(leaf)}")
 
-    save_file(flat_state, f"{fpath}.safetensors")
+    save_file(flat_state, fpath)
 
 def load_safetensors(fname, target):
     arrays, treedef = jax.tree.flatten_with_path(target)
@@ -27,7 +27,7 @@ def load_safetensors(fname, target):
     key_index={k:i for i,k in enumerate(arrkeys)}
     # Load tensor data
     print(f"load {fname}.safetensors")
-    flat_state = load_file(f"{fname}.safetensors")
+    flat_state = load_file(fname)
     missing = set(arrkeys)-set(flat_state.keys())
     if len(missing)>0:
         print("missing keys: {}".format(', '.join(sorted(list(missing)))))
